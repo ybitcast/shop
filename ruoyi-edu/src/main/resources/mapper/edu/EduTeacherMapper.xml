@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.edu.mapper.EduTeacherMapper">
+    
+    <resultMap type="EduTeacher" id="EduTeacherResult">
+        <result property="id"    column="id"    />
+        <result property="teaSno"    column="tea_sno"    />
+        <result property="teaName"    column="tea_name"    />
+        <result property="flag"    column="flag"    />
+        <result property="teaTitle"    column="tea_title"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectEduTeacherVo">
+        select id, tea_sno, tea_name, flag, tea_title, dept_id from edu_teacher
+    </sql>
+
+    <select id="selectEduTeacherList" parameterType="EduTeacher" resultMap="EduTeacherResult">
+        <include refid="selectEduTeacherVo"/>
+        <where>  
+            <if test="teaSno != null "> and tea_sno = #{teaSno}</if>
+            <if test="teaName != null  and teaName != ''"> and tea_name like concat('%', #{teaName}, '%')</if>
+            <if test="flag != null  and flag != ''"> and flag = #{flag}</if>
+            <if test="teaTitle != null  and teaTitle != ''"> and tea_title = #{teaTitle}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduTeacherById" parameterType="Long" resultMap="EduTeacherResult">
+        <include refid="selectEduTeacherVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduTeacher" parameterType="EduTeacher" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teaSno != null">tea_sno,</if>
+            <if test="teaName != null">tea_name,</if>
+            <if test="flag != null">flag,</if>
+            <if test="teaTitle != null">tea_title,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teaSno != null">#{teaSno},</if>
+            <if test="teaName != null">#{teaName},</if>
+            <if test="flag != null">#{flag},</if>
+            <if test="teaTitle != null">#{teaTitle},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduTeacher" parameterType="EduTeacher">
+        update edu_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teaSno != null">tea_sno = #{teaSno},</if>
+            <if test="teaName != null">tea_name = #{teaName},</if>
+            <if test="flag != null">flag = #{flag},</if>
+            <if test="teaTitle != null">tea_title = #{teaTitle},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduTeacherById" parameterType="Long">
+        delete from edu_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteEduTeacherByIds" parameterType="String">
+        delete from edu_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

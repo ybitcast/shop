@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.weixinjiekou.mapper.UserMapper">
+<select id="getUserByOpenId" resultType="com.ruoyi.weixinjiekou.pojo.User">
+select * from user where openid =#{openid}
+</select>
+
+
+<insert id="add">
+insert into user (openid,session_key,token) values(#{openid},#{session_key},#{token})
+</insert>
+
+<update id="update">
+update user set  token =#{token} where  openid =#{openid}
+</update>
+
+<select id="findAccountByToken" resultType="com.ruoyi.weixinjiekou.pojo.User">
+select * from user where token =#{token}
+</select>
+</mapper>

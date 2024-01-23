@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.edu.mapper.EduClazzMapper">
+    
+    <resultMap type="EduClazz" id="EduClazzResult">
+        <result property="id"    column="id"    />
+        <result property="clazzName"    column="clazz_name"    />
+        <result property="clazzCount"    column="clazz_count"    />
+        <result property="visible"    column="visible"    />
+    </resultMap>
+
+    <sql id="selectEduClazzVo">
+        select id, clazz_name, clazz_count, visible from edu_clazz
+    </sql>
+
+    <select id="selectEduClazzList" parameterType="EduClazz" resultMap="EduClazzResult">
+        <include refid="selectEduClazzVo"/>
+        <where>  
+            <if test="clazzName != null  and clazzName != ''"> and clazz_name like concat('%', #{clazzName}, '%')</if>
+            <if test="clazzCount != null  and clazzCount != ''"> and clazz_count = #{clazzCount}</if>
+            <if test="visible != null  and visible != ''"> and visible = #{visible}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduClazzById" parameterType="Long" resultMap="EduClazzResult">
+        <include refid="selectEduClazzVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduClazz" parameterType="EduClazz" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_clazz
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clazzName != null and clazzName != ''">clazz_name,</if>
+            <if test="clazzCount != null and clazzCount != ''">clazz_count,</if>
+            <if test="visible != null and visible != ''">visible,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clazzName != null and clazzName != ''">#{clazzName},</if>
+            <if test="clazzCount != null and clazzCount != ''">#{clazzCount},</if>
+            <if test="visible != null and visible != ''">#{visible},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduClazz" parameterType="EduClazz">
+        update edu_clazz
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clazzName != null and clazzName != ''">clazz_name = #{clazzName},</if>
+            <if test="clazzCount != null and clazzCount != ''">clazz_count = #{clazzCount},</if>
+            <if test="visible != null and visible != ''">visible = #{visible},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduClazzById" parameterType="Long">
+        delete from edu_clazz where id = #{id}
+    </delete>
+
+    <delete id="deleteEduClazzByIds" parameterType="String">
+        delete from edu_clazz where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
